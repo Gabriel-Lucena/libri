@@ -9,8 +9,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.libri.CadastroUsuario;
-
 public class SQLHelper extends SQLiteOpenHelper {
 
     /* Atributos da classe de connection */
@@ -21,6 +19,14 @@ public class SQLHelper extends SQLiteOpenHelper {
 
     /*Método de verificar se a conexão está aberta*/
 
+    public SQLHelper(@Nullable Context context) {
+        super(context, DB_NAME, null, DB_VERSION);
+    }
+
+    /*
+     * Método construtor - Recebe os valores iniciais de abertura da conexão
+     * */
+
     public static SQLHelper getINSTANCE(Context context) {
 
         if (INSTANCE == null) {
@@ -29,12 +35,6 @@ public class SQLHelper extends SQLiteOpenHelper {
 
         return INSTANCE;
 
-    }
-
-    /*Método construtor - Recebe os valores iniciais de abertura da conexão*/
-
-    public SQLHelper(@Nullable Context context) {
-        super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override
@@ -67,11 +67,15 @@ public class SQLHelper extends SQLiteOpenHelper {
         Log.d("SQLITE-", "BANCO DE DADOS CRIADO! - " + DB_VERSION);
     }
 
-    //Inserção de usuário
+    /*
+     * Inserção de usuário
+     */
 
     public boolean addUser(String nome, String sobrenome, String email, String login, String senha, String created_date) {
 
-        //Configura o SQLITE para escrita:
+        /*
+         * Configura o SQLITE para a escrita:
+         */
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
@@ -118,7 +122,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         //Configura o SQLITE para escrita:
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-       int idLivro = 0;
+        int idLivro = 0;
 
         try {
 
