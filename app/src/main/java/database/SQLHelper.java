@@ -9,6 +9,12 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import model.Item;
+import model.Livro;
+
 public class SQLHelper extends SQLiteOpenHelper {
 
     /* Atributos da classe de connection */
@@ -58,10 +64,10 @@ public class SQLHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE tblLivro" +
                 "(idLivro INTEGER PRIMARY KEY," +
                 "IdUsuario INTEGER," +
-                "titulo TEXT," +
+                "nome TEXT," +
                 "descricao TEXT," +
                 "foto TEXT," +
-                "created_date DATETIME," +
+                "createdAt DATETIME," +
                 "FOREIGN KEY (idUsuario) REFERENCES tblUsuario (idUsuario))");
 
         Log.d("SQLITE-", "BANCO DE DADOS CRIADO! - " + DB_VERSION);
@@ -193,7 +199,56 @@ public class SQLHelper extends SQLiteOpenHelper {
 
         return 0;
 
+        /*
+         *  Fim do método de login
+         */
+
+    }
+
+    /*
+     * Listagem de livros
+     */
+
+    public List<Item> listBook() {
+        List<Item> items = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM tblLivro WHERE idUsuario = ?",
+                new String[]{"1"});
+
+        try {
+
+            if (cursor.moveToFirst()) {
+                do {
+                    Livro livro = new Livro(
+                            cursor.getString(cursor.getColumnIndex("nome")),
+                            cursor.getString(cursor.getColumnIndex("descricao"))
+                    );
+
+                    items.add(new Item(0, livro));
+                } while (cursor.moveToNext());
+            }
+
+        } catch (Exception e) {
+
+            Log.d("SQLIERROR:", e.getMessage());
+
+        } finally {
+
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+
+        }
+
+        return items;
     }
 
 
 }
+
+/*
+ * Fechamento da classe
+ */
