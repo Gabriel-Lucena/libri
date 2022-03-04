@@ -210,13 +210,19 @@ public class SQLHelper extends SQLiteOpenHelper {
      */
 
     public List<Item> listBook() {
+
         List<Item> items = new ArrayList<>();
 
         SQLiteDatabase db = getReadableDatabase();
 
+//        Cursor cursor = db.rawQuery(
+//                "SELECT * FROM tblLivro WHERE idUsuario = ?",
+//                new String[]{"1"});
+
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM tblLivro WHERE idUsuario = ?",
-                new String[]{"1"});
+                "SELECT * FROM tblLivro",
+                new String[]{}
+        );
 
         try {
 

@@ -3,6 +3,7 @@ package com.example.libri;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import database.SQLHelper;
 import model.Item;
 import model.Livro;
 
@@ -24,6 +26,12 @@ public class FeedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+
+        List<Item> item = SQLHelper.getINSTANCE(this).listBook();
+
+        recyclerView.setAdapter(new LivroAdapter(item));
     }
 
 
@@ -95,7 +103,13 @@ public class FeedActivity extends AppCompatActivity {
 
             if (viewType == 0) {
 
-                return new LivroAdapter.LivroViewHolder();
+                return new LivroAdapter.LivroViewHolder(
+
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.item_container_livro,
+                                parent,
+                                false)
+
+                );
             }
 
             return null;
@@ -109,6 +123,24 @@ public class FeedActivity extends AppCompatActivity {
              */
 
 
+            if (getItemViewType(position) == 0) {
+
+                Livro livro = (Livro) item.get(position).getObject();
+
+                ((LivroAdapter.LivroViewHolder) holder).setLivroData(livro);
+
+            }
+
+        }
+
+        /*
+         * Método auxiliar de manipulação de position para o método onBindViewHolder
+         */
+
+        public int getItemViewType(int position) {
+
+            return item.get(position).getType();
+
         }
 
         @Override
@@ -118,7 +150,7 @@ public class FeedActivity extends AppCompatActivity {
              * Quantidade de itens na contagem
              */
 
-            return 0;
+            return item.size();
         }
 
         /*
